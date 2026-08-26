@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Data (keep data separate from git tracking)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/dummy/*
+!data/dummy/.gitkeep
+
+# Saved Models
+models/saved_models/*
+!models/saved_models/.gitkeep
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# IDE & OS
+.vscode/*
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
