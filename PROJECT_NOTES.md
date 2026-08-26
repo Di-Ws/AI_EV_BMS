@@ -59,10 +59,20 @@ This file keeps track of all completed tasks, project milestones, and explanatio
      * **XGBoost Regressor**: A gradient-boosted decision tree model known for high accuracy on structured data.
    * Both trained models are saved in a dictionary (`self.models`) for easy comparison and usage.
 
+## 📌 Milestone 5: Data Preparation & 80/20 Train-Test Splitting
+* **What we did**: Refined `prepare_data()` in [`src/train_model.py`](file:///d:/ev-battery-health/src/train_model.py#L50-L75).
+* **How it works**:
+  1. **Feature Isolation (`X`)**: Selects `['cycle', 'avg_voltage', 'max_temp']` columns.
+  2. **Target Isolation (`y`)**: Selects `'SoH'` column.
+  3. **80/20 Train-Test Split**: Uses `scikit-learn`'s `train_test_split(X, y, test_size=0.2, random_state=42)` to split 1,000 samples into **800 training samples** and **200 testing samples**.
+  4. **Attribute Persistence**: Stores `self.X_train`, `self.X_test`, `self.y_train`, `self.y_test` on the `BatteryHealthModel` instance.
+
 ---
 
 ## 📝 Future Tasks Roadmap
+- [x] Perform 80/20 Train-Test Data Preparation & Splitting (`prepare_data()`).
 - [ ] Implement data evaluation & error metrics calculation (RMSE, MAE, R² score).
 - [ ] Connect raw NASA Li-ion battery dataset cleaning pipeline in `src/data_prep.py`.
 - [ ] Add model saving/exporting functionality (`joblib.dump()`) in `src/train_model.py`.
 - [ ] Implement inference function in `src/predict.py` for real-time predictions.
+
