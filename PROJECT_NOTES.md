@@ -69,10 +69,66 @@ This file keeps track of all completed tasks, project milestones, and explanatio
 
 ---
 
+## 📌 Milestone 6: Merged Battery Health Dataset & ML Model Pipeline Verification
+* **What we did**: 
+  1. Extracted and merged all 34 NASA battery datasets into a unified, clean master dataset saved at [`data/processed/merged_battery_dataset.csv`](file:///d:/ev-battery-health/data/processed/merged_battery_dataset.csv) (2,769 samples across 14 columns).
+  2. Implemented dataset merger and ML verification pipeline in [`src/merge_datasets.py`](file:///d:/ev-battery-health/src/merge_datasets.py).
+  3. Feature matrix includes: `cycle`, `avg_voltage`, `max_voltage`, `min_voltage`, `avg_current`, `max_current`, `avg_temp`, `max_temp`, `discharge_duration`.
+  4. Target variables: `soh` (State of Health) and `rul` (Remaining Useful Life).
+* **Model Accuracy Verification Results**:
+  * **Random Forest Regressor**: $R^2 = 0.9265$ (92.65% variance explained), $\text{MAE} = 0.3292$
+  * **XGBoost Regressor**: $R^2 = 0.9211$ (92.11% variance explained), $\text{MAE} = 0.2561$
+
+---
+
+## 📌 Milestone 7: Leak-Free Battery-Wise Model Training & Evaluation
+* **What we did**:
+  1. **Fixed Feature Leakage**: Dropped `capacity`, target columns (`soh`, `rul`), `cycle`, and `battery_id` from inputs. Retained non-leaky physical features.
+  2. **Battery-Wise Split**: Replaced random train-test splitting with `GroupShuffleSplit` on `battery_id`.
+
+---
+
+## 📌 Milestone 8: Per-Battery Reference Capacity, Warm-Up Trimming & LOBO Evaluation (v2)
+* **What we did**:
+  1. **Per-Battery Reference Capacity**: Replaced fixed 2.0 Ah / Cycle 1 denominator with median of the 3 highest capacities in the first 20 valid cycles per battery. Bounded `soh_max` to realistic $1.000 - 1.140$ (eliminating the $27.55\times$ spike).
+  2. **Warm-Up & Low-Capacity Trimming**: Filtered discharges $\le 0.5\text{ Ah}$ and trimmed initial warm-up cycles until capacity reaches $95\%$ of reference capacity (fixed `B0033` initial ramp). Removed `B0052` (<10 valid rows).
+  3. **Honest RUL Labels**: Defined RUL relative to battery-specific EOL threshold ($\text{SOH} \le 80\%$). 19 of 33 batteries reached EOL (1,216 valid RUL samples; 2,490 valid SOH samples).
+  4. **Leave-One-Battery-Out (LOBO) Results**:
+     * **Target: State of Health (`soh`)**:
+       * **Mean Baseline**: $R^2 = -0.0301$, $\text{MAE} = 0.0820$, $\text{RMSE} = 0.1010$
+       * **Random Forest**: $R^2 = 0.5675$, $\text{MAE} = 0.0497$, $\text{RMSE} = 0.0655$
+       * **XGBoost**: $R^2 = 0.6923$, $\text{MAE} = 0.0420$, $\text{RMSE} = 0.0552$
+     * **Target: Remaining Useful Life (`rul`)**:
+       * **Mean Baseline**: $R^2 = -0.0656$, $\text{MAE} = 36.2154$ cycles, $\text{RMSE} = 43.6343$ cycles
+       * **Random Forest**: $R^2 = 0.3780$, $\text{MAE} = 27.0895$ cycles, $\text{RMSE} = 33.3378$ cycles
+       * **XGBoost**: $R^2 = 0.4844$, $\text{MAE} = 25.2010$ cycles, $\text{RMSE} = 30.3519$ cycles
+
+---
+
+## 📌 Milestone 9: Final Model Artifact Export & Hardware Readiness Preparation
+* **What we did**:
+  1. **Final Model Artifact Export**: Executed `python src/evaluate_model.py --save` to fit models on all valid NASA battery cycles and exported dictionary artifacts (`soh_randomforest.joblib`, `soh_xgboost.joblib`, `rul_randomforest.joblib`, `rul_xgboost.joblib`).
+  2. **Self-Contained Model Packaging**: Stored model weights, required feature names in exact order, target names, and rolling window parameters inside each `.joblib` dictionary file.
+  3. **Hardware-Agnostic Inference Engine**: Updated [`src/predict.py`](file:///d:/ev-battery-health/src/predict.py) to parse hardware telemetry logs, dynamically build trailing rolling features, enforce exact feature order, and return real-time predictions.
+  4. **Hardware Transition Protocol**:
+     * **Data-Source Agnostic Schema**: Standardized input fields (`battery_id`, `cycle`, `avg_voltage`, `max_voltage`, `min_voltage`, `avg_current`, `max_current`, `avg_temp`, `max_temp`, `ambient_temp`, `discharge_duration`).
+     * **Capacity Ground-Truth Protocol**: Schedule periodic controlled full discharge tests to measure reference capacity for retraining/calibration.
+     * **Time-Series Evaluation**: Evaluate hardware cells using temporal splitting (train on early cycles, evaluate on later cycles).
+     * **Raw Signal Archival**: Save raw time-series sensor data (1Hz/10Hz) to `data/raw/` so summary metrics can be re-computed without re-cycling cells.
+
+---
+
 ## 📝 Future Tasks Roadmap
-- [x] Perform 80/20 Train-Test Data Preparation & Splitting (`prepare_data()`).
-- [ ] Implement data evaluation & error metrics calculation (RMSE, MAE, R² score).
-- [ ] Connect raw NASA Li-ion battery dataset cleaning pipeline in `src/data_prep.py`.
-- [ ] Add model saving/exporting functionality (`joblib.dump()`) in `src/train_model.py`.
-- [ ] Implement inference function in `src/predict.py` for real-time predictions.
+- [x] Perform Train-Test Data Preparation & Splitting (`prepare_data()`).
+- [x] Extract & merge raw NASA Li-ion battery datasets into `data/processed/merged_battery_dataset.csv`.
+- [x] Implement data evaluation & error metrics calculation (RMSE, MAE, R² score).
+- [x] Fix feature list to remove data leakage (`capacity`, `cycle`, `soh`, `rul`).
+- [x] Implement Per-Battery Reference Capacity & Warm-up Trimming.
+- [x] Run Leave-One-Battery-Out (LOBO) Cross-Validation across all 33 valid batteries.
+- [x] Export final model artifacts using `python src/evaluate_model.py --save`.
+- [x] Implement inference function in `src/predict.py` for real-time predictions.
+- [ ] Build exploratory visuals & evaluation plots in `notebooks/`.
+
+
+
 

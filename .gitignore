@@ -29,3 +29,6 @@ models/saved_models/*
 !.vscode/settings.json
 .DS_Store
 Thumbs.db
+
+5. Battery Data Set/
+models/saved_models/*randomforest.joblib
