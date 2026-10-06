@@ -41,27 +41,31 @@ ev-battery-health/
 └── README.md                 # Project overview and setup instructions
 ```
 
-## Setup & Running the API & Frontend
+## How to Use
 
-1. **Activate Virtual Environment**:
+Run these commands from the project root in PowerShell:
+
+1. **Create and activate a virtual environment**:
    ```powershell
-   .\venv\Scripts\Activate.ps1
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1
    ```
 
-2. **Install Dependencies**:
+2. **Install dependencies**:
    ```powershell
    pip install -r requirements.txt
    ```
 
-3. **Start the FastAPI REST API Server**:
+3. **Start the API and dashboard**:
    ```powershell
    python -m uvicorn src.api:app --reload --host 127.0.0.1 --port 8000
    ```
 
-4. **Access Applications**:
-   - **Interactive Web Dashboard**: `http://127.0.0.1:8000`
-   - **Swagger / OpenAPI Interactive Docs**: `http://127.0.0.1:8000/docs`
-   - **ReDoc Documentation**: `http://127.0.0.1:8000/redoc`
+4. **Use the application**:
+   - Open the interactive dashboard at `http://127.0.0.1:8000`. Enter battery telemetry or select a preset, then run a prediction. You can also upload a telemetry CSV to view cycle-by-cycle degradation results.
+   - Open `http://127.0.0.1:8000/docs` to try the REST API interactively, or `http://127.0.0.1:8000/redoc` for the API reference.
+
+Keep the server running while using the dashboard. Press `Ctrl+C` in the terminal to stop it.
 
 ## API Endpoints
 
