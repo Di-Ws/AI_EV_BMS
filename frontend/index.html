@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI EV BMS — Battery Health & RUL Prediction Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Navigation Header -->
+        <header class="navbar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>AI EV BMS</h1>
+                    <span class="subtext">Battery Health & RUL Prediction System</span>
+                </div>
+            </div>
+
+            <div class="nav-controls">
+                <div class="model-select-wrapper">
+                    <label for="modelSelect"><i class="fa-solid fa-brain"></i> Model:</label>
+                    <select id="modelSelect" class="styled-select">
+                        <option value="xgboost" selected>XGBoost Regressor (Recommended - R² 0.69)</option>
+                        <option value="randomforest">Random Forest (R² 0.57)</option>
+                    </select>
+                </div>
+
+                <div class="api-status-badge" id="apiStatusBadge">
+                    <span class="status-dot pulsing"></span>
+                    <span class="status-text" id="statusText">API Connecting...</span>
+                    <span class="latency-text" id="latencyText">-- ms</span>
+                </div>
+
+                <a href="/docs" target="_blank" class="docs-btn">
+                    <i class="fa-solid fa-code"></i> API Docs (/docs)
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Content -->
+        <main class="dashboard-grid">
+            
+            <!-- Left Panel: Input & Telemetry Controls -->
+            <section class="panel input-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-sliders"></i> Real-Time Telemetry Input</h2>
+                    <div class="header-actions">
+                        <button id="btnLoadSample" class="btn-secondary btn-sm" title="Load sample NASA telemetry data">
+                            <i class="fa-solid fa-flask"></i> Load Sample Data
+                        </button>
+                    </div>
+                </div>
+
+                <form id="telemetryForm" class="telemetry-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="batteryId">Battery Identifier</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-battery-half"></i>
+                                <input type="text" id="batteryId" value="HW_CELL_01" placeholder="e.g. CELL_B0005" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cycle">Cycle Count (#)</label>
+                            <div class="input-with-icon">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                                <input type="number" id="cycle" value="120" min="1" max="2000" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="avgVoltage">Avg Voltage (V)</label>
+                            <input type="number" id="avgVoltage" value="3.52" step="0.01" min="2.0" max="4.5" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="maxVoltage">Peak Voltage (V)</label>
+                            <input type="number" id="maxVoltage" value="4.18" step="0.01" min="2.0" max="4.5" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="minVoltage">Min Voltage (V)</label>
+                            <input type="number" id="minVoltage" value="2.68" step="0.01" min="1.5" max="4.0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="avgCurrent">Avg Discharge Current (A)</label>
+                            <input type="number" id="avgCurrent" value="-1.52" step="0.01" max="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="avgTemp">Avg Cell Temp (°C)</label>
+                            <input type="number" id="avgTemp" value="33.4" step="0.1" min="-10" max="80" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="maxTemp">Peak Cell Temp (°C)</label>
+                            <input type="number" id="maxTemp" value="41.2" step="0.1" min="-10" max="90" required>
+                        </div>
+
+                        <div class="form-group span-2">
+                            <label for="dischargeDuration">Discharge Duration (seconds)</label>
+                            <div class="range-wrapper">
+                                <input type="range" id="dischargeDurationRange" min="500" max="4500" step="50" value="2850">
+                                <input type="number" id="dischargeDuration" value="2850" min="100" max="6000" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btnPredict" class="btn-primary">
+                        <i class="fa-solid fa-microchip"></i> Run API Prediction
+                    </button>
+                </form>
+
+                <!-- Quick Sample Selector Chips -->
+                <div class="sample-chips-container">
+                    <span class="chip-label">Presets:</span>
+                    <button class="chip" data-preset="fresh"><i class="fa-solid fa-leaf"></i> Fresh Cell (Cycle 10)</button>
+                    <button class="chip" data-preset="mid"><i class="fa-solid fa-gauge-high"></i> Mid-Life (Cycle 100)</button>
+                    <button class="chip" data-preset="aged"><i class="fa-solid fa-triangle-exclamation"></i> Aged Cell (Cycle 220)</button>
+                </div>
+            </section>
+
+            <!-- Right Panel: Inference Results & Real-time Gauges -->
+            <section class="panel results-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-chart-line"></i> Real-time AI Health Metrics</h2>
+                    <span class="badge" id="modelUsedBadge">XGBoost API</span>
+                </div>
+
+                <div class="gauges-container">
+                    <!-- SOH Gauge Card -->
+                    <div class="gauge-card" id="sohCard">
+                        <div class="card-title">State of Health (SOH)</div>
+                        <div class="circular-progress-container">
+                            <svg class="progress-ring" width="160" height="160">
+                                <circle class="progress-ring-circle-bg" stroke-width="12" fill="transparent" r="66" cx="80" cy="80"/>
+                                <circle class="progress-ring-circle" id="sohCircle" stroke-width="12" fill="transparent" r="66" cx="80" cy="80"/>
+                            </svg>
+                            <div class="gauge-inner">
+                                <span class="gauge-value" id="sohValue">--</span>
+                                <span class="gauge-unit">%</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="sub-label">Original Capacity Retained</span>
+                        </div>
+                    </div>
+
+                    <!-- RUL Card -->
+                    <div class="gauge-card" id="rulCard">
+                        <div class="card-title">Remaining Useful Life (RUL)</div>
+                        <div class="rul-display">
+                            <div class="rul-value-wrapper">
+                                <span class="rul-value" id="rulValue">--</span>
+                                <span class="rul-unit">Cycles</span>
+                            </div>
+                            <div class="est-range">
+                                <i class="fa-solid fa-car-side"></i> ~<span id="estKm">--</span> km drive range
+                            </div>
+                        </div>
+                        <div class="rul-progress-wrapper">
+                            <div class="rul-progress-bar" id="rulProgressBar" style="width: 0%;"></div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="sub-label">End of Life Cutoff: 80% SOH</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Status Recommendation Card -->
+                <div class="status-card" id="statusCard">
+                    <div class="status-header">
+                        <div class="status-badge-wrapper">
+                            <span class="status-badge" id="statusBadge"><i class="fa-solid fa-circle-check"></i> READY</span>
+                            <span class="health-score" id="healthScoreText">Standing by for inference</span>
+                        </div>
+                    </div>
+                    <p class="status-recommendation" id="statusRecommendation">
+                        Enter telemetry values or click "Run API Prediction" to generate real-time AI diagnostic report.
+                    </p>
+                </div>
+
+                <!-- API Snippet Quick Developer Drawer -->
+                <div class="dev-api-box">
+                    <div class="dev-header">
+                        <span><i class="fa-solid fa-terminal"></i> Frontend Connection Endpoint</span>
+                        <button id="btnCopyCurl" class="btn-icon" title="Copy cURL command"><i class="fa-regular fa-copy"></i></button>
+                    </div>
+                    <pre class="code-snippet"><code id="codeSnippetText">POST /api/predict/single
+Host: http://localhost:8000
+Content-Type: application/json
+
+{"battery_id": "HW_CELL_01", "cycle": 120, "avg_voltage": 3.52, ...}</code></pre>
+                </div>
+            </section>
+
+            <!-- Bottom Full-Width Section: CSV Batch Inference & Historical Telemetry Curve -->
+            <section class="panel full-width-panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-file-csv"></i> Batch CSV Telemetry Inference & Aging Curve</h2>
+                    <div class="upload-zone-wrapper">
+                        <input type="file" id="csvFileInput" accept=".csv" class="hidden-file-input">
+                        <button id="btnUploadCsv" class="btn-secondary btn-sm">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Upload Telemetry CSV
+                        </button>
+                    </div>
+                </div>
+
+                <div class="batch-content-grid">
+                    <!-- Dropzone & Batch Stats -->
+                    <div class="batch-summary-card">
+                        <div class="dropzone" id="csvDropzone">
+                            <i class="fa-solid fa-file-excel drop-icon"></i>
+                            <p class="drop-text">Drag & drop battery log CSV file here or click upload</p>
+                            <span class="drop-subtext">Supports NASA Li-ion battery dataset format or standard telemetry logs</span>
+                        </div>
+
+                        <div class="csv-metrics-grid hidden" id="csvMetricsGrid">
+                            <div class="metric-box">
+                                <span class="metric-label">Analyzed Cycles</span>
+                                <span class="metric-val" id="metricTotalCycles">0</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-label">Initial SOH</span>
+                                <span class="metric-val" id="metricStartSoh">--</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-label">Final SOH</span>
+                                <span class="metric-val" id="metricFinalSoh">--</span>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-label">Degradation / Cycle</span>
+                                <span class="metric-val" id="metricDegradation">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart Container -->
+                    <div class="chart-wrapper">
+                        <canvas id="degradationChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>AI EV BMS Infrastructure &copy; 2026 — End-to-End Battery State of Health & Remaining Useful Life ML API</p>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -118,6 +118,28 @@ This file keeps track of all completed tasks, project milestones, and explanatio
 
 ---
 
+## 📌 Milestone 10: Production FastAPI REST API & Interactive Web Dashboard Frontend
+* **What we did**:
+  1. **RESTful Machine Learning API ([`src/api.py`](file:///d:/ev-battery-health/src/api.py))**:
+     * Built with **FastAPI** and **Uvicorn**.
+     * Automatically loads trained `.joblib` model artifacts (`soh_xgboost`, `soh_randomforest`, `rul_xgboost`, `rul_randomforest`) on startup.
+     * Enforces CORS policy (`allow_origins=["*"]`) for seamless frontend connectivity.
+     * Interactive Swagger UI docs available at `http://127.0.0.1:8000/docs`.
+  2. **API Endpoints**:
+     * `GET /api/health`: Healthcheck, timestamp, and loaded model count.
+     * `GET /api/models`: Model registry info, feature lists, and LOBO metrics summary.
+     * `POST /api/predict/single`: Real-time SOH %, RUL cycles, health classification status (EXCELLENT, GOOD, WARNING, CRITICAL), and actionable safety recommendations for single telemetry input.
+     * `POST /api/predict/batch`: Array-based multi-cycle telemetry inference.
+     * `POST /api/predict/csv`: Upload `.csv` log files for automatic rolling feature engineering, degradation rate calculation, and cycle-by-cycle predictions.
+     * `GET /api/sample-data`: Serves real test battery cycles from `data/processed/merged_battery_dataset.csv`.
+  3. **Web Dashboard Frontend ([`frontend/`](file:///d:/ev-battery-health/frontend/))**:
+     * High-tech dark mode interface with glassmorphism styling ([`frontend/style.css`](file:///d:/ev-battery-health/frontend/style.css)).
+     * Real-time form controls with preset quick-loaders (Fresh, Mid-Life, Aged cell telemetry) ([`frontend/index.html`](file:///d:/ev-battery-health/frontend/index.html)).
+     * Animated circular State of Health (SOH) gauge & Remaining Useful Life progress bar ([`frontend/app.js`](file:///d:/ev-battery-health/frontend/app.js)).
+     * Integrated drag-and-drop CSV batch upload with Chart.js aging degradation visualization curves.
+
+---
+
 ## 📝 Future Tasks Roadmap
 - [x] Perform Train-Test Data Preparation & Splitting (`prepare_data()`).
 - [x] Extract & merge raw NASA Li-ion battery datasets into `data/processed/merged_battery_dataset.csv`.
@@ -127,7 +149,9 @@ This file keeps track of all completed tasks, project milestones, and explanatio
 - [x] Run Leave-One-Battery-Out (LOBO) Cross-Validation across all 33 valid batteries.
 - [x] Export final model artifacts using `python src/evaluate_model.py --save`.
 - [x] Implement inference function in `src/predict.py` for real-time predictions.
+- [x] Build production REST API & connecting web frontend dashboard (`src/api.py` & `frontend/`).
 - [ ] Build exploratory visuals & evaluation plots in `notebooks/`.
+
 
 
 
