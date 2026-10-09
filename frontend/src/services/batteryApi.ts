@@ -41,22 +41,22 @@ interface BatteryProfile {
 }
 
 const BATTERY_PROFILES: BatteryProfile[] = [
-  { id: 'B0005', cycles: 168, initialSoh: 1.0,  finalSoh: 0.71, voltageStart: 3.53, voltageEnd: 3.47, tempBase: 32.3, tempVariance: 1.2, capacityStart: 1.86, rulStart: 167 },
-  { id: 'B0006', cycles: 155, initialSoh: 1.0,  finalSoh: 0.60, voltageStart: 3.56, voltageEnd: 3.41, tempBase: 32.2, tempVariance: 1.5, capacityStart: 2.06, rulStart: 154 },
-  { id: 'B0007', cycles: 168, initialSoh: 1.0,  finalSoh: 0.76, voltageStart: 3.53, voltageEnd: 3.48, tempBase: 32.2, tempVariance: 1.0, capacityStart: 1.92, rulStart: 167 },
-  { id: 'B0018', cycles: 132, initialSoh: 1.0,  finalSoh: 0.73, voltageStart: 3.53, voltageEnd: 3.44, tempBase: 30.8, tempVariance: 1.0, capacityStart: 1.86, rulStart: 131 },
-  { id: 'B0029', cycles: 40,  initialSoh: 1.0,  finalSoh: 0.95, voltageStart: 3.37, voltageEnd: 3.39, tempBase: 52.8, tempVariance: 0.3, capacityStart: 1.75, rulStart: 39 },
-  { id: 'B0030', cycles: 40,  initialSoh: 1.0,  finalSoh: 0.94, voltageStart: 3.38, voltageEnd: 3.39, tempBase: 54.3, tempVariance: 0.3, capacityStart: 1.69, rulStart: 39 },
-  { id: 'B0031', cycles: 40,  initialSoh: 1.0,  finalSoh: 1.00, voltageStart: 3.40, voltageEnd: 3.42, tempBase: 53.7, tempVariance: 0.2, capacityStart: 1.69, rulStart: 39 },
-  { id: 'B0032', cycles: 40,  initialSoh: 1.0,  finalSoh: 0.96, voltageStart: 3.33, voltageEnd: 3.34, tempBase: 54.5, tempVariance: 0.3, capacityStart: 1.71, rulStart: 39 },
-  { id: 'B0042', cycles: 112, initialSoh: 1.0,  finalSoh: 0.80, voltageStart: 3.47, voltageEnd: 3.36, tempBase: 29.5, tempVariance: 2.0, capacityStart: 1.77, rulStart: 111 },
-  { id: 'B0043', cycles: 112, initialSoh: 1.0,  finalSoh: 0.76, voltageStart: 3.48, voltageEnd: 3.41, tempBase: 29.5, tempVariance: 2.0, capacityStart: 1.73, rulStart: 111 },
-  { id: 'B0044', cycles: 112, initialSoh: 1.0,  finalSoh: 0.74, voltageStart: 3.46, voltageEnd: 3.41, tempBase: 31.5, tempVariance: 2.0, capacityStart: 1.69, rulStart: 111 },
-  { id: 'B0045', cycles: 72,  initialSoh: 1.0,  finalSoh: 0.62, voltageStart: 3.35, voltageEnd: 3.31, tempBase: 9.4,  tempVariance: 0.5, capacityStart: 1.21, rulStart: 71 },
-  { id: 'B0046', cycles: 72,  initialSoh: 1.0,  finalSoh: 0.69, voltageStart: 3.44, voltageEnd: 3.33, tempBase: 9.0,  tempVariance: 0.5, capacityStart: 1.80, rulStart: 71 },
-  { id: 'B0047', cycles: 72,  initialSoh: 1.0,  finalSoh: 0.70, voltageStart: 3.47, voltageEnd: 3.38, tempBase: 8.4,  tempVariance: 0.5, capacityStart: 1.71, rulStart: 71 },
-  { id: 'B0048', cycles: 72,  initialSoh: 1.0,  finalSoh: 0.74, voltageStart: 3.47, voltageEnd: 3.41, tempBase: 7.9,  tempVariance: 0.5, capacityStart: 1.66, rulStart: 71 },
-  { id: 'B0053', cycles: 55,  initialSoh: 1.0,  finalSoh: 1.00, voltageStart: 3.08, voltageEnd: 3.06, tempBase: 12.4, tempVariance: 0.3, capacityStart: 1.31, rulStart: 54 },
+  { id: 'B0005', cycles: 168, initialSoh: 1.0, finalSoh: 0.71, voltageStart: 3.53, voltageEnd: 3.47, tempBase: 32.3, tempVariance: 1.2, capacityStart: 1.86, rulStart: 167 },
+  { id: 'B0006', cycles: 155, initialSoh: 1.0, finalSoh: 0.60, voltageStart: 3.56, voltageEnd: 3.41, tempBase: 32.2, tempVariance: 1.5, capacityStart: 2.06, rulStart: 154 },
+  { id: 'B0007', cycles: 168, initialSoh: 1.0, finalSoh: 0.76, voltageStart: 3.53, voltageEnd: 3.48, tempBase: 32.2, tempVariance: 1.0, capacityStart: 1.92, rulStart: 167 },
+  { id: 'B0018', cycles: 132, initialSoh: 1.0, finalSoh: 0.73, voltageStart: 3.53, voltageEnd: 3.44, tempBase: 30.8, tempVariance: 1.0, capacityStart: 1.86, rulStart: 131 },
+  { id: 'B0029', cycles: 40, initialSoh: 1.0, finalSoh: 0.95, voltageStart: 3.37, voltageEnd: 3.39, tempBase: 52.8, tempVariance: 0.3, capacityStart: 1.75, rulStart: 39 },
+  { id: 'B0030', cycles: 40, initialSoh: 1.0, finalSoh: 0.94, voltageStart: 3.38, voltageEnd: 3.39, tempBase: 54.3, tempVariance: 0.3, capacityStart: 1.69, rulStart: 39 },
+  { id: 'B0031', cycles: 40, initialSoh: 1.0, finalSoh: 1.00, voltageStart: 3.40, voltageEnd: 3.42, tempBase: 53.7, tempVariance: 0.2, capacityStart: 1.69, rulStart: 39 },
+  { id: 'B0032', cycles: 40, initialSoh: 1.0, finalSoh: 0.96, voltageStart: 3.33, voltageEnd: 3.34, tempBase: 54.5, tempVariance: 0.3, capacityStart: 1.71, rulStart: 39 },
+  { id: 'B0042', cycles: 112, initialSoh: 1.0, finalSoh: 0.80, voltageStart: 3.47, voltageEnd: 3.36, tempBase: 29.5, tempVariance: 2.0, capacityStart: 1.77, rulStart: 111 },
+  { id: 'B0043', cycles: 112, initialSoh: 1.0, finalSoh: 0.76, voltageStart: 3.48, voltageEnd: 3.41, tempBase: 29.5, tempVariance: 2.0, capacityStart: 1.73, rulStart: 111 },
+  { id: 'B0044', cycles: 112, initialSoh: 1.0, finalSoh: 0.74, voltageStart: 3.46, voltageEnd: 3.41, tempBase: 31.5, tempVariance: 2.0, capacityStart: 1.69, rulStart: 111 },
+  { id: 'B0045', cycles: 72, initialSoh: 1.0, finalSoh: 0.62, voltageStart: 3.35, voltageEnd: 3.31, tempBase: 9.4, tempVariance: 0.5, capacityStart: 1.21, rulStart: 71 },
+  { id: 'B0046', cycles: 72, initialSoh: 1.0, finalSoh: 0.69, voltageStart: 3.44, voltageEnd: 3.33, tempBase: 9.0, tempVariance: 0.5, capacityStart: 1.80, rulStart: 71 },
+  { id: 'B0047', cycles: 72, initialSoh: 1.0, finalSoh: 0.70, voltageStart: 3.47, voltageEnd: 3.38, tempBase: 8.4, tempVariance: 0.5, capacityStart: 1.71, rulStart: 71 },
+  { id: 'B0048', cycles: 72, initialSoh: 1.0, finalSoh: 0.74, voltageStart: 3.47, voltageEnd: 3.41, tempBase: 7.9, tempVariance: 0.5, capacityStart: 1.66, rulStart: 71 },
+  { id: 'B0053', cycles: 55, initialSoh: 1.0, finalSoh: 1.00, voltageStart: 3.08, voltageEnd: 3.06, tempBase: 12.4, tempVariance: 0.3, capacityStart: 1.31, rulStart: 54 },
 ];
 
 const BATTERY_IDS = BATTERY_PROFILES.map((p) => p.id);
@@ -155,61 +155,61 @@ function generateAlerts(): Alert[] {
     threshold: number;
     cycleOffset: number;
   }[] = [
-    {
-      batteryId: 'B0029',
-      type: 'high_temperature',
-      severity: 'warning',
-      message: 'Battery temperature above normal operating range (52.8°C avg)',
-      value: 52.8,
-      threshold: 45.0,
-      cycleOffset: 2,
-    },
-    {
-      batteryId: 'B0030',
-      type: 'high_temperature',
-      severity: 'critical',
-      message: 'Critical temperature sustained at 54.3°C — thermal management inspection recommended',
-      value: 54.3,
-      threshold: 50.0,
-      cycleOffset: 1,
-    },
-    {
-      batteryId: 'B0006',
-      type: 'low_soh',
-      severity: 'warning',
-      message: 'State of Health approaching end-of-life threshold (60.4%)',
-      value: 60.4,
-      threshold: 60.0,
-      cycleOffset: 3,
-    },
-    {
-      batteryId: 'B0045',
-      type: 'low_soh',
-      severity: 'warning',
-      message: 'State of Health below 70% — battery degradation accelerating',
-      value: 63.5,
-      threshold: 70.0,
-      cycleOffset: 2,
-    },
-    {
-      batteryId: 'B0046',
-      type: 'abnormal_voltage',
-      severity: 'warning',
-      message: 'Voltage drop detected — cell voltage trending below nominal range',
-      value: 3.33,
-      threshold: 3.35,
-      cycleOffset: 5,
-    },
-    {
-      batteryId: 'B0005',
-      type: 'abnormal_current',
-      severity: 'normal',
-      message: 'Discharge current within normal operating parameters',
-      value: 1.25,
-      threshold: 2.0,
-      cycleOffset: 4,
-    },
-  ];
+      {
+        batteryId: 'B0029',
+        type: 'high_temperature',
+        severity: 'warning',
+        message: 'Battery temperature above normal operating range (52.8°C avg)',
+        value: 52.8,
+        threshold: 45.0,
+        cycleOffset: 2,
+      },
+      {
+        batteryId: 'B0030',
+        type: 'high_temperature',
+        severity: 'critical',
+        message: 'Critical temperature sustained at 54.3°C — thermal management inspection recommended',
+        value: 54.3,
+        threshold: 50.0,
+        cycleOffset: 1,
+      },
+      {
+        batteryId: 'B0006',
+        type: 'low_soh',
+        severity: 'warning',
+        message: 'State of Health approaching end-of-life threshold (60.4%)',
+        value: 60.4,
+        threshold: 60.0,
+        cycleOffset: 3,
+      },
+      {
+        batteryId: 'B0045',
+        type: 'low_soh',
+        severity: 'warning',
+        message: 'State of Health below 70% — battery degradation accelerating',
+        value: 63.5,
+        threshold: 70.0,
+        cycleOffset: 2,
+      },
+      {
+        batteryId: 'B0046',
+        type: 'abnormal_voltage',
+        severity: 'warning',
+        message: 'Voltage drop detected — cell voltage trending below nominal range',
+        value: 3.33,
+        threshold: 3.35,
+        cycleOffset: 5,
+      },
+      {
+        batteryId: 'B0005',
+        type: 'abnormal_current',
+        severity: 'normal',
+        message: 'Discharge current within normal operating parameters',
+        value: 1.25,
+        threshold: 2.0,
+        cycleOffset: 4,
+      },
+    ];
 
   for (const cfg of alertConfigs) {
     const latest = getLatestReading(cfg.batteryId);
@@ -244,8 +244,9 @@ export async function getBatteryIds(): Promise<string[]> {
     const res = await fetch(`${API_BASE}/batteries`);
     if (res.ok) {
       const data = await res.json();
-      if (data.batteries && data.batteries.length > 0) {
-        return data.batteries;
+      const list = Array.isArray(data) ? data : data.batteries;
+      if (Array.isArray(list) && list.length > 0) {
+        return list;
       }
     }
   } catch (e) {

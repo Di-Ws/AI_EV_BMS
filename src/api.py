@@ -406,7 +406,7 @@ async def predict_csv(
 @app.get("/api/batteries", summary="List All Available Battery IDs")
 def get_battery_ids_list():
     """Returns list of battery IDs present in the dataset."""
-    merged_path = DATA_DIR / "merged_battery_dataset.csv"
+    merged_path = DATA_DIR / "cleaned_dataset.csv"
     if merged_path.exists():
         try:
             df = pd.read_csv(merged_path)
@@ -457,7 +457,7 @@ def run_battery_ml_inference(df_batt: pd.DataFrame, model_type: str = "xgboost")
 @app.get("/api/dashboard-data", summary="Get Full Dashboard Data with Real ML Predictions")
 def get_dashboard_data_api(battery_id: str = Query(default="B0005"), model_type: str = Query(default="xgboost")):
     """Returns battery summary, recent readings, SOH prediction curve, and active alerts."""
-    merged_path = DATA_DIR / "merged_battery_dataset.csv"
+    merged_path = DATA_DIR / "cleaned_dataset.csv"
 
     if merged_path.exists():
         try:
@@ -585,7 +585,7 @@ def get_analytics_data_api(battery_id: str = Query(default="B0005")):
     dash_data = get_dashboard_data_api(battery_id=battery_id)
     readings = dash_data.get("recent_readings", [])
     # Return all cycle readings in chronological order
-    merged_path = DATA_DIR / "merged_battery_dataset.csv"
+    merged_path = DATA_DIR / "cleaned_dataset.csv"
     if merged_path.exists():
         try:
             df = pd.read_csv(merged_path)
@@ -649,7 +649,7 @@ def get_sample_data(battery_id: Optional[str] = Query(default=None, description=
     """
     Returns sample battery test cycles from the processed dataset for quick testing in frontend.
     """
-    merged_path = DATA_DIR / "merged_battery_dataset.csv"
+    merged_path = DATA_DIR / "cleaned_dataset.csv"
     if not merged_path.exists():
         samples = [
             {"battery_id": "B0005", "cycle": 1, "avg_voltage": 3.52, "max_voltage": 4.19, "min_voltage": 2.71, "avg_current": -1.49, "max_current": 0.0, "avg_temp": 32.5, "max_temp": 39.8, "ambient_temp": 24.0, "discharge_duration": 3350.0},
@@ -681,7 +681,7 @@ def get_sample_data(battery_id: Optional[str] = Query(default=None, description=
         available_batteries = list(df["battery_id"].unique()) if "battery_id" in df.columns else []
 
         return {
-            "source": "merged_battery_dataset.csv",
+            "source": "cleaned_dataset.csv",
             "total_available_rows": len(df),
             "available_batteries": available_batteries[:10],
             "samples": samples
